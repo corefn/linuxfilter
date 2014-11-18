@@ -9,11 +9,11 @@
 #include <mysql/mysql.h>
 #include "../include/user_config.h"
 
-#define INIT_SYS				1
-#define	USER_CONFIG				2
-#define FEATURE_CONFIG			3
-#define APP_CONFIG				4
-#define POLICY_CONFIG			5
+#define INIT_SYS		1
+#define	USER_CONFIG		2
+#define FEATURE_CONFIG		3
+#define APP_CONFIG		4
+#define POLICY_CONFIG		5
 #define NETLINK_LINUX_FILTER	31		/*Unkonwn*/
 
 /*
@@ -22,7 +22,7 @@
 const char *INIT_CMD		=	"init";
 const char *USER_CMD		=	"user";
 const char *FEATURE_CMD		=	"feature";
-const char *APP_CMD			=	"app";
+const char *APP_CMD		=	"app";
 const char *POLICY_CMD		=	"policy";
 
 /*
@@ -45,8 +45,8 @@ static int InitSocket(struct sockaddr_nl *p_src_addr)
 	int sock;
 
 	p_src_addr->nl_family	= AF_NETLINK;
-	p_src_addr->nl_pad		= 0;
-	p_src_addr->nl_pid		= getpid();
+	p_src_addr->nl_pad	= 0;
+	p_src_addr->nl_pid	= getpid();
 	p_src_addr->nl_groups	= 0;
 
 	if ((sock = socket(AF_NETLINK, SOCK_RAW, NETLINK_FIREWALL)) < 0) 
@@ -120,28 +120,28 @@ static int ParseCommand(char *argv[])
  */
 static void ProcessRow(MYSQL_ROW row, void *structure, int type)
 {
-	UserConfig		*my_user_config;
-	AppConfig		*my_app_config;
+	UserConfig	*my_user_config;
+	AppConfig	*my_app_config;
 	PolicyConfig	*my_policy_config;
 
 	switch (type)
 	{
 		case USER_CONFIG:
-			my_user_config			=	(UserConfig *)structure;
+			my_user_config		=	(UserConfig *)structure;
 			inet_aton(row[0], (struct in_addr *)&(my_user_config->ip));
 			my_user_config->level	=	strtol(row[1], NULL, 10);
 			break;
 		case APP_CONFIG:
-			my_app_config					=	(AppConfig *)structure;
-			my_app_config->app_config_id	=	strtol(row[0], NULL, 10);
+			my_app_config				=	(AppConfig *)structure;
+			my_app_config->app_config_id		=	strtol(row[0], NULL, 10);
 			my_app_config->app_id			=	strtol(row[1], NULL, 10);
 			my_app_config->band_width		=	strtol(row[2], NULL, 10);
 			my_app_config->begin_time		=	strtol(row[3], NULL, 10);
 			my_app_config->end_time			=	strtol(row[4], NULL, 10);
 			break;
 		case POLICY_CONFIG:
-			my_policy_config				=	(PolicyConfig *)structure;
-			my_policy_config->level			=	strtol(row[0], NULL, 10);
+			my_policy_config		=	(PolicyConfig *)structure;
+			my_policy_config->level		=	strtol(row[0], NULL, 10);
 			my_policy_config->app_config_id	=	strtol(row[1], NULL, 10);
 			break;
 		default:
@@ -195,7 +195,7 @@ static void CommonConfig(MYSQL *mysql, int sock,
 static int ReadLine(FILE *fp, char *buf)
 {
 	char	c;
-	int		i = 0;
+	int	i = 0;
 
 	while ((c = getc(fp)) != EOF && c != '\n')
 	{
@@ -244,9 +244,7 @@ static int GetAppID(char *buf, int len)
 
 	for (i = 0; i + 2 < len; i++)
 	{
-		if (buf[i] == 'i' 
-				&& buf[i + 1] == 'd'
-				&& buf[i + 2] == '=')
+		if (buf[i] == 'i' && buf[i + 1] == 'd' && buf[i + 2] == '=')
 		{
 			j = i + 4;
 			k = 0;
@@ -338,7 +336,7 @@ static void LoadFeature(int sock, struct sockaddr_nl *p_dst_addr)
 		if (AppOrFeatureStart(buf, "app", 3))
 		{
 			app_id	=	GetAppID(buf, len);
-			len		=	ReadLine(file, buf);
+			len	=	ReadLine(file, buf);
 			while (AppOrFeatureStart(buf, "feature", 7)) 
 			{
 				my_feature_config.app_id = app_id;
@@ -360,10 +358,10 @@ static void LoadFeature(int sock, struct sockaddr_nl *p_dst_addr)
 static ConfigFilter(char *argv[], MYSQL *conn, int sock,
 		struct sockaddr_nl *p_dst_addr)
 {
-	int command;
-	UserConfig my_user_config;
-	AppConfig my_app_config;
-	PolicyConfig my_policy_config;
+	int		command;
+	UserConfig	my_user_config;
+	AppConfig	my_app_config;
+	PolicyConfig	my_policy_config;
 
 	command = ParseCommand(argv);
 	switch (command)
