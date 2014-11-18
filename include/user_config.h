@@ -21,9 +21,9 @@
 #define COMMAND_NAME_LEN		16
 #define PARAMETER_LEN			128
 #define MAX_PAYLOAD_LEN			160
-#define SIG_LEN					14
-#define	TCP_PROTO				6
-#define UDP_PROTO				17
+#define SIG_LEN				14
+#define	TCP_PROTO			6
+#define UDP_PROTO			17
 
 /*
  * represent filter information to kernel
@@ -45,8 +45,8 @@ typedef struct FilterMsg {
  * 	4.	POLICY_CMD: fetch control policy form mysql.
  */
 typedef struct UserCommand {
-	char			main_cmd_name[COMMAND_NAME_LEN];
-	char			sub_cmd_name[COMMAND_NAME_LEN];
+	char		main_cmd_name[COMMAND_NAME_LEN];
+	char		sub_cmd_name[COMMAND_NAME_LEN];
 	unsigned char	param[PARAMETER_LEN]; /* sotre XXXpolicy */
 } UserCommand;
 
